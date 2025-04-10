@@ -1,5 +1,6 @@
 package pl.kacpik.barber.services;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
 
 @SpringBootTest
 public class EmployeeServiceTest {
@@ -57,6 +59,35 @@ public class EmployeeServiceTest {
         employeeService.removeEmployee(savedEmployee);
 
         Optional<Employee> result = employeeRepository.findById(savedEmployee.getId());
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void shouldFindEmployeeById(){
+        Employee employee = Employee.builder()
+                .pesel("00000000000")
+                .name("testName")
+                .lastName("testLastName")
+                .birthday(LocalDate.of(2000,1, 27))
+                .build();
+        Employee savedEmployed = employeeRepository.save(employee);
+
+        Optional<Employee> result = employeeService.getEmployeeById(savedEmployed.getId());
+        assertTrue(result.isPresent());
+        Assertions.assertEquals(savedEmployed, result.get());
+    }
+
+    @Test
+    public void shouldReturnEmptyOptionalWhenEmployeeNotFoundById(){
+        Employee employee = Employee.builder()
+                .pesel("00000000000")
+                .name("testName")
+                .lastName("testLastName")
+                .birthday(LocalDate.of(2000,1, 27))
+                .build();
+        Employee savedEmployed = employeeRepository.save(employee);
+
+        Optional<Employee> result = employeeService.getEmployeeById(savedEmployed.getId() + 1);
         assertTrue(result.isEmpty());
     }
 }
