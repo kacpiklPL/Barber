@@ -30,7 +30,7 @@ public class CustomerServiceTest {
     }
 
     @Test
-    public void testShouldAddedCustomerToDatabase(){
+    public void shouldAddedCustomerToDatabase(){
         Customer customer = Customer.builder()
                 .name("testName")
                 .lastName("testLastName")
@@ -45,7 +45,7 @@ public class CustomerServiceTest {
     }
 
     @Test
-    public void testShouldRemoveCustomerFromDatabase(){
+    public void shouldRemoveCustomerFromDatabase(){
         Customer customer = Customer.builder()
                 .name("testName")
                 .lastName("testLastName")
