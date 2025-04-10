@@ -6,4 +6,6 @@ public interface EmployeeService {
 
     Employee addEmployee(Employee employee);
 
+    void removeEmployee(Employee employee);
+
 }

@@ -8,8 +8,11 @@ import pl.kacpik.barber.model.Employee;
 import pl.kacpik.barber.repositories.EmployeeRepository;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class EmployeeServiceTest {
@@ -39,5 +42,21 @@ public class EmployeeServiceTest {
         assertThat(result)
                 .hasSize(1).
                 containsExactly(employee);
+    }
+
+    @Test
+    public void shouldRemoveEmployeeFromDatabase(){
+        Employee employee = Employee.builder()
+                .pesel("00000000000")
+                .name("testName")
+                .lastName("testLastName")
+                .birthday(LocalDate.of(2000,1, 27))
+                .build();
+        Employee savedEmployee = employeeService.addEmployee(employee);
+
+        employeeService.removeEmployee(savedEmployee);
+
+        Optional<Employee> result = employeeRepository.findById(savedEmployee.getPesel());
+        assertTrue(result.isEmpty());
     }
 }
