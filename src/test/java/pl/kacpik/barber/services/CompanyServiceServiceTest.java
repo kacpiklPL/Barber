@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -73,5 +74,24 @@ public class CompanyServiceServiceTest {
         Optional<CompanyService> result = companyServiceRepository.findById(companyService.getId());
         assertTrue(result.isEmpty());
     }
+
+    @Test
+    public void shouldFindCompanyServiceById(){
+        CompanyService companyService = createCompanyServiceWithEmployee();
+
+        Optional<CompanyService> result = companyServiceRepository.findById(companyService.getId());
+        assertTrue(result.isPresent());
+        assertEquals(companyService, result.get());
+    }
+
+    @Test
+    public void shouldReturnEmptyOptionalWhenCompanyServiceNotFoundById(){
+        CompanyService companyService = createCompanyServiceWithEmployee();
+
+        Optional<CompanyService> result = companyServiceRepository.findById(companyService.getId() + 1);
+        assertTrue(result.isEmpty());
+    }
+
+
 
 }
