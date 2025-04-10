@@ -1,15 +1,18 @@
 package pl.kacpik.barber.services;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.kacpik.barber.model.CompanyService;
-import pl.kacpik.barber.model.Customer;
+import pl.kacpik.barber.model.Employee;
 import pl.kacpik.barber.repositories.CompanyServiceRepository;
+import pl.kacpik.barber.repositories.EmployeeRepository;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -24,19 +27,36 @@ public class CompanyServiceServiceTest {
     @Autowired
     private CompanyServiceRepository companyServiceRepository;
 
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
     @BeforeEach
     public void setUp(){
         companyServiceRepository.deleteAll();
+        employeeRepository.deleteAll();
     }
 
-    @Test
-    public void shouldCompanyServiceAddedToDatabase(){
+    private CompanyService createCompanyServiceWithEmployee(){
+        Employee employee = Employee.builder()
+                .pesel("00000000000")
+                .name("testName")
+                .lastName("testLastName")
+                .birthday(LocalDate.of(2000,1, 27))
+                .build();
+        employeeRepository.save(employee);
         CompanyService companyService = CompanyService.builder()
                 .name("Strzyżenie męskie")
                 .duration(Duration.ofMinutes(40).toMillis())
-                .price(BigDecimal.valueOf(80))
+                .price(BigDecimal.valueOf(80, 2))
+                .employee(employee)
                 .build();
-        companyServiceService.addCompanyService(companyService);
+        return companyServiceService.addCompanyService(companyService);
+    }
+
+    @Transactional
+    @Test
+    public void shouldCompanyServiceAddedToDatabase(){
+        CompanyService companyService = createCompanyServiceWithEmployee();
 
         Iterable<CompanyService> result = companyServiceRepository.findAll();
         assertThat(result)
@@ -46,16 +66,11 @@ public class CompanyServiceServiceTest {
 
     @Test
     public void shouldRemoveCompanyServiceFromDatabase(){
-        CompanyService companyService = CompanyService.builder()
-                .name("Strzyżenie męskie")
-                .duration(Duration.ofMinutes(40).toMillis())
-                .price(BigDecimal.valueOf(80))
-                .build();
-        CompanyService saved = companyServiceService.addCompanyService(companyService);
+        CompanyService companyService = createCompanyServiceWithEmployee();
 
-        companyServiceService.removeCompanyService(saved);
+        companyServiceService.removeCompanyService(companyService);
 
-        Optional<CompanyService> result = companyServiceRepository.findById(saved.getId());
+        Optional<CompanyService> result = companyServiceRepository.findById(companyService.getId());
         assertTrue(result.isEmpty());
     }
 
