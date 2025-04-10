@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import pl.kacpik.barber.model.Employee;
 
 @Repository
-public interface EmployeeRepository extends CrudRepository<Employee, String> {
+public interface EmployeeRepository extends CrudRepository<Employee, Long> {
 
 
 

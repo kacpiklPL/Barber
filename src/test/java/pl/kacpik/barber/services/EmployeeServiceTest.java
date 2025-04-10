@@ -56,7 +56,7 @@ public class EmployeeServiceTest {
 
         employeeService.removeEmployee(savedEmployee);
 
-        Optional<Employee> result = employeeRepository.findById(savedEmployee.getPesel());
+        Optional<Employee> result = employeeRepository.findById(savedEmployee.getId());
         assertTrue(result.isEmpty());
     }
 }

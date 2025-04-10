@@ -18,7 +18,9 @@ import java.util.Objects;
 public class Employee {
 
     @Id
-    @Column(length = 11)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String pesel;
 
     private String name;
@@ -32,11 +34,11 @@ public class Employee {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return Objects.equals(getPesel(), employee.getPesel()) && Objects.equals(getName(), employee.getName()) && Objects.equals(getLastName(), employee.getLastName()) && Objects.equals(getBirthday(), employee.getBirthday());
+        return Objects.equals(getId(), employee.getId()) && Objects.equals(getPesel(), employee.getPesel()) && Objects.equals(getName(), employee.getName()) && Objects.equals(getLastName(), employee.getLastName()) && Objects.equals(getBirthday(), employee.getBirthday());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPesel(), getName(), getLastName(), getBirthday());
+        return Objects.hash(getId(), getPesel(), getName(), getLastName(), getBirthday());
     }
 }
