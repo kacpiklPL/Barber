@@ -58,6 +58,32 @@ public class CustomerServiceTest {
     }
 
     @Test
+    public void shouldFindCustomerById(){
+        Customer customer = Customer.builder()
+                .name("testName")
+                .lastName("testLastName")
+                .phoneNumber("123456789")
+                .build();
+        Customer savedCustomer = customerService.addCustomer(customer);
+
+        Optional<Customer> result = customerRepository.findById(savedCustomer.getId());
+        assertTrue(result.isPresent());
+    }
+
+    @Test
+    public void shouldReturnEmptyOptionalWhenCustomerNotFoundById(){
+        Customer customer = Customer.builder()
+                .name("testName")
+                .lastName("testLastName")
+                .phoneNumber("123456789")
+                .build();
+        Customer savedCustomer = customerService.addCustomer(customer);
+
+        Optional<Customer> result = customerRepository.findById(savedCustomer.getId() + 1);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     public void shouldFindCustomerByPhoneNumber(){
         final String phoneNumber = "123456789";
         Customer customer = Customer.builder()
