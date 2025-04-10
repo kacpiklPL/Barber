@@ -12,4 +12,6 @@ public interface EmployeeService {
 
     Optional<Employee> getEmployeeById(long id);
 
+    Optional<Employee> getEmployeeByPesel(String pesel);
+
 }

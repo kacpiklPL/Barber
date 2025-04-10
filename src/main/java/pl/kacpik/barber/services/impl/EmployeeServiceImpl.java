@@ -28,4 +28,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Optional<Employee> getEmployeeById(long id) {
         return employeeRepository.findById(id);
     }
+
+    @Override
+    public Optional<Employee> getEmployeeByPesel(String pesel) {
+        return employeeRepository.findByPesel(pesel);
+    }
 }

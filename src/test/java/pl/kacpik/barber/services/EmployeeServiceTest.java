@@ -90,4 +90,33 @@ public class EmployeeServiceTest {
         Optional<Employee> result = employeeService.getEmployeeById(savedEmployed.getId() + 1);
         assertTrue(result.isEmpty());
     }
+
+    @Test
+    public void shouldFindEmployeeByPesel(){
+        Employee employee = Employee.builder()
+                .pesel("00000000000")
+                .name("testName")
+                .lastName("testLastName")
+                .birthday(LocalDate.of(2000,1, 27))
+                .build();
+        Employee savedEmployed = employeeRepository.save(employee);
+
+        Optional<Employee> result = employeeService.getEmployeeByPesel("00000000000");
+        assertTrue(result.isPresent());
+        Assertions.assertEquals(savedEmployed, result.get());
+    }
+
+    @Test
+    public void shouldReturnEmptyOptionalWhenEmployeeNotFoundByPesel(){
+        Employee employee = Employee.builder()
+                .pesel("00000000000")
+                .name("testName")
+                .lastName("testLastName")
+                .birthday(LocalDate.of(2000,1, 27))
+                .build();
+        employeeRepository.save(employee);
+
+        Optional<Employee> result = employeeService.getEmployeeByPesel("00000000999");
+        assertTrue(result.isEmpty());
+    }
 }
