@@ -8,8 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import pl.kacpik.barber.model.Customer;
 import pl.kacpik.barber.repositories.CustomerRepository;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.util.AssertionErrors.assertFalse;
 
 
 @SpringBootTest
@@ -52,6 +55,34 @@ public class CustomerServiceTest {
 
         customerService.removeCustomer(customer);
         assertTrue(customerRepository.findById(savedCustomer.getId()).isEmpty());
+    }
+
+    @Test
+    public void shouldFindCustomerByPhoneNumber(){
+        final String phoneNumber = "123456789";
+        Customer customer = Customer.builder()
+                .name("testName")
+                .lastName("testLastName")
+                .phoneNumber(phoneNumber)
+                .build();
+        Customer savedCustomer = customerService.addCustomer(customer);
+
+        Optional<Customer> result = customerService.getUserByPhoneNumber(phoneNumber);
+        assertTrue(result.isPresent());
+        assertEquals(savedCustomer, result.get());
+    }
+
+    @Test
+    public void shouldReturnEmptyOptionalWhenCustomerNotFoundByPhoneNumber(){
+        Customer customer = Customer.builder()
+                .name("testName")
+                .lastName("testLastName")
+                .phoneNumber("123456789")
+                .build();
+        customerService.addCustomer(customer);
+
+        Optional<Customer> result = customerService.getUserByPhoneNumber("000000000");
+        assertTrue(result.isEmpty());
     }
 
 }
