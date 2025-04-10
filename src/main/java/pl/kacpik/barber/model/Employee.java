@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -28,6 +29,9 @@ public class Employee {
     private String lastName;
 
     private LocalDate birthday;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CompanyService> services;
 
     @Override
     public boolean equals(Object o) {

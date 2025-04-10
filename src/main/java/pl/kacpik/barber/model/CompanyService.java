@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @Table(name = "services")
@@ -26,8 +27,20 @@ public class CompanyService {
 
     private long duration;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employer_id")
+    @ManyToOne()
+    @JoinColumn(name = "employer_id", nullable = false)
     private Employee employee;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CompanyService that = (CompanyService) o;
+        return getDuration() == that.getDuration() && Objects.equals(getId(), that.getId()) && Objects.equals(getName(), that.getName()) && Objects.equals(getPrice(), that.getPrice()) && Objects.equals(getEmployee(), that.getEmployee());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getPrice(), getDuration(), getEmployee());
+    }
 }
