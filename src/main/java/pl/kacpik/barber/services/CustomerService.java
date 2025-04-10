@@ -6,4 +6,6 @@ public interface CustomerService {
 
     Customer addCustomer(Customer customer);
 
+    void removeCustomer(Customer customer);
+
 }
