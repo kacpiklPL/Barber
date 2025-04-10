@@ -15,4 +15,9 @@ public class CompanyServiceServiceImpl implements CompanyServiceService {
         return companyServiceRepository.save(companyService);
     }
 
+    @Override
+    public void removeCompanyService(CompanyService companyService) {
+        companyServiceRepository.delete(companyService);
+    }
+
 }

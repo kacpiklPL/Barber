@@ -10,8 +10,10 @@ import pl.kacpik.barber.repositories.CompanyServiceRepository;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class CompanyServiceServiceTest {
@@ -40,6 +42,21 @@ public class CompanyServiceServiceTest {
         assertThat(result)
                 .hasSize(1).
                 containsExactly(companyService);
+    }
+
+    @Test
+    public void shouldRemoveCompanyServiceFromDatabase(){
+        CompanyService companyService = CompanyService.builder()
+                .name("Strzyżenie męskie")
+                .duration(Duration.ofMinutes(40).toMillis())
+                .price(BigDecimal.valueOf(80))
+                .build();
+        CompanyService saved = companyServiceService.addCompanyService(companyService);
+
+        companyServiceService.removeCompanyService(saved);
+
+        Optional<CompanyService> result = companyServiceRepository.findById(saved.getId());
+        assertTrue(result.isEmpty());
     }
 
 }

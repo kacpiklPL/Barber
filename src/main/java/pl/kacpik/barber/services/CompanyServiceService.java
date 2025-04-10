@@ -6,4 +6,6 @@ public interface CompanyServiceService {
 
     CompanyService addCompanyService(CompanyService companyService);
 
+    void removeCompanyService(CompanyService companyService);
+
 }
