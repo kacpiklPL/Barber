@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "reservations")
@@ -23,6 +24,9 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
+
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ReservationCompanyService> reservationCompanyServices;
 
     private LocalDateTime startTime;
 
