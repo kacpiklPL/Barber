@@ -8,6 +8,8 @@ import pl.kacpik.barber.repositories.CompanyServiceRepository;
 import pl.kacpik.barber.repositories.ReservationRepository;
 import pl.kacpik.barber.services.ReservationService;
 
+import java.util.Optional;
+
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
@@ -28,5 +30,10 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void removeReservation(Reservation reservation) {
         reservationRepository.delete(reservation);
+    }
+
+    @Override
+    public Optional<Reservation> getReservationById(long reservationId) {
+        return reservationRepository.findById(reservationId);
     }
 }

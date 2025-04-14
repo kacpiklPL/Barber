@@ -161,4 +161,17 @@ public class ReservationServiceTest {
         assertThat(resultEmployee.isPresent(), is(true));
         assertThat(resultEmployee.get(), equalTo(employee));
     }
+
+    @Transactional
+    @Test
+    public void shouldFindReservationById(){
+        Customer customer = createCustomer();
+        Employee employee = createEmployee();
+        Reservation reservation = createReservationWithService(customer, employee);
+        Reservation savedReservation = reservationService.addReservation(reservation);
+
+        Optional<Reservation> resultReservation = reservationService.getReservationById(savedReservation.getId());
+        assertThat(resultReservation.isPresent(), is(true));
+        assertThat(resultReservation.get(), equalTo(reservation));
+    }
 }
