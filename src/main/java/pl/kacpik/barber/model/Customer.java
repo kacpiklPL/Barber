@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "customers")
@@ -25,6 +26,9 @@ public class Customer {
     private String lastName;
 
     private String phoneNumber;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Reservation> reservations;
 
     @Override
     public boolean equals(Object o) {
