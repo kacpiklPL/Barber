@@ -6,4 +6,6 @@ public interface ReservationService {
 
     Reservation addReservation(Reservation reservation);
 
+    void removeReservation(Reservation reservation);
+
 }

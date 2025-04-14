@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.kacpik.barber.model.*;
 import pl.kacpik.barber.repositories.CompanyServiceRepository;
+import pl.kacpik.barber.repositories.ReservationCompanyServiceRepository;
 import pl.kacpik.barber.repositories.ReservationRepository;
 
 import java.math.BigDecimal;
@@ -14,14 +15,18 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
 public class ReservationServiceTest {
+
+    @Autowired
+    private ReservationCompanyServiceRepository reservationCompanyServiceRepository;
 
     @Autowired
     private ReservationService reservationService;
@@ -105,5 +110,55 @@ public class ReservationServiceTest {
         assertThat(services, hasSize(1));
         ReservationCompanyService actual = services.iterator().next();
         assertThat(actual, is(reservation.getReservationCompanyServices().iterator().next()));
+    }
+
+    @Transactional
+    @Test
+    public void shouldRemoveReservationFromDatabase(){
+        Customer customer = createCustomer();
+        Employee employee = createEmployee();
+        Reservation reservation = createReservationWithService(customer, employee);
+        Reservation savedReservation = reservationService.addReservation(reservation);
+
+        reservationService.removeReservation(savedReservation);
+
+        Optional<Reservation> resultReservation = reservationRepository.findById(savedReservation.getId());
+        assertThat(resultReservation.isEmpty(), is(true));
+
+        Iterable<ReservationCompanyService> result = reservationCompanyServiceRepository.findAll();
+        AssertionsForInterfaceTypes.assertThat(result)
+                .hasSize(0);
+
+        List<ReservationCompanyService> resultServices = reservationCompanyServiceRepository.findAllByReservationId(savedReservation.getId());
+        assertThat(resultServices, hasSize(0));
+
+        assertThat(customerService.getCustomerById(customer.getId()).isPresent(), is(true));
+        assertThat(employeeService.getEmployeeById(employee.getId()).isPresent(), is(true));
+    }
+
+    @Transactional
+    @Test
+    public void shouldNotRemoveCustomerWhenReservationIsDeleted(){
+        Customer customer = createCustomer();
+        Employee employee = createEmployee();
+        Reservation reservation = createReservationWithService(customer, employee);
+        reservationService.addReservation(reservation);
+
+        Optional<Customer> resultCustomer = customerService.getCustomerById(customer.getId());
+        assertThat(resultCustomer.isPresent(), is(true));
+        assertThat(resultCustomer.get(), equalTo(customer));
+    }
+
+    @Transactional
+    @Test
+    public void shouldNotRemoveEmployeeWhenReservationIsDeleted(){
+        Customer customer = createCustomer();
+        Employee employee = createEmployee();
+        Reservation reservation = createReservationWithService(customer, employee);
+        reservationService.addReservation(reservation);
+
+        Optional<Employee> resultEmployee = employeeService.getEmployeeById(employee.getId());
+        assertThat(resultEmployee.isPresent(), is(true));
+        assertThat(resultEmployee.get(), equalTo(employee));
     }
 }
