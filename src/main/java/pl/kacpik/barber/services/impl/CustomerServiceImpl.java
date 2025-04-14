@@ -25,8 +25,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<Customer> getUserByPhoneNumber(String phoneNumber) {
+    public Optional<Customer> getCustomerByPhoneNumber(String phoneNumber) {
         return Optional.ofNullable(customerRepository.findByPhoneNumber(phoneNumber));
+    }
+
+    @Override
+    public Optional<Customer> getCustomerById(Long id) {
+        return customerRepository.findById(id);
     }
 
 }

@@ -10,6 +10,8 @@ public interface CustomerService {
 
     void removeCustomer(Customer customer);
 
-    Optional<Customer> getUserByPhoneNumber(String phoneNumber);
+    Optional<Customer> getCustomerByPhoneNumber(String phoneNumber);
+
+    Optional<Customer> getCustomerById(Long id);
 
 }

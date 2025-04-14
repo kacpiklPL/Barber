@@ -1,6 +1,5 @@
 package pl.kacpik.barber.services;
 
-import org.assertj.core.api.AssertionsForInterfaceTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.util.AssertionErrors.assertFalse;
 
 
 @SpringBootTest
@@ -66,7 +64,7 @@ public class CustomerServiceTest {
                 .build();
         Customer savedCustomer = customerService.addCustomer(customer);
 
-        Optional<Customer> result = customerRepository.findById(savedCustomer.getId());
+        Optional<Customer> result = customerService.getCustomerById(savedCustomer.getId());
         assertTrue(result.isPresent());
     }
 
@@ -93,7 +91,7 @@ public class CustomerServiceTest {
                 .build();
         Customer savedCustomer = customerService.addCustomer(customer);
 
-        Optional<Customer> result = customerService.getUserByPhoneNumber(phoneNumber);
+        Optional<Customer> result = customerService.getCustomerByPhoneNumber(phoneNumber);
         assertTrue(result.isPresent());
         assertEquals(savedCustomer, result.get());
     }
@@ -107,7 +105,7 @@ public class CustomerServiceTest {
                 .build();
         customerService.addCustomer(customer);
 
-        Optional<Customer> result = customerService.getUserByPhoneNumber("000000000");
+        Optional<Customer> result = customerService.getCustomerByPhoneNumber("000000000");
         assertTrue(result.isEmpty());
     }
 
