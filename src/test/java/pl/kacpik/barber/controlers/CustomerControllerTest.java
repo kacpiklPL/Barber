@@ -1,12 +1,29 @@
 package pl.kacpik.barber.controlers;
 
+import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import pl.kacpik.barber.mappers.CustomerMapperImpl;
+import pl.kacpik.barber.model.Customer;
+import pl.kacpik.barber.model.dto.CustomerDto;
+import pl.kacpik.barber.repositories.CustomerRepository;
+import pl.kacpik.barber.services.CustomerService;
 
+import java.util.Optional;
+
+import static net.bytebuddy.matcher.ElementMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.ArgumentMatchers.isNotNull;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -16,6 +33,12 @@ public class CustomerControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    private CustomerService customerService;
+
+    @MockitoBean
+    private CustomerMapperImpl customerMapper;
 
     @Test
     public void shouldCreateNewCustomer() throws Exception{
@@ -31,6 +54,58 @@ public class CustomerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonValue))
                 .andExpect(status().isCreated());
+    }
+
+    private Customer createCustomer(){
+        return Customer.builder()
+                .id(1L)
+                .name("Kacper")
+                .lastName("Nowak")
+                .phoneNumber("000000000")
+                .build();
+    }
+
+    private CustomerDto createCustomerDto(){
+        return CustomerDto.builder()
+                .id(1L)
+                .name("Kacper")
+                .lastName("Nowak")
+                .phoneNumber("000000000").build();
+    }
+
+    @Test
+    public void shouldReturnCustomerWhenExists() throws Exception {
+        Customer customer = createCustomer();
+        CustomerDto customerDto = createCustomerDto();
+
+        when(customerService.getCustomerById(1L)).thenReturn(Optional.of(customer));
+        when(customerMapper.mapTo(customer)).thenReturn(customerDto);
+
+        MvcResult result = mockMvc.perform(get("/customers/{customerId}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String json = result.getResponse().getContentAsString();
+        CustomerDto resultCustomerDto = new Gson().fromJson(json, CustomerDto.class);
+
+        assertThat(resultCustomerDto, notNullValue());
+        assertThat(resultCustomerDto.getId(), equalTo(1L));
+        assertThat(resultCustomerDto.getName(), equalTo("Kacper"));
+        assertThat(resultCustomerDto.getLastName(), equalTo("Nowak"));
+        assertThat(resultCustomerDto.getPhoneNumber(), equalTo("000000000"));
+    }
+
+    @Test
+    public void shouldReturnNotFoundWhenCustomerDoesNotExist() throws Exception {
+        long nonExistentCustomerId = 1L;
+        when(customerService.getCustomerById(nonExistentCustomerId)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/customers/{customerId}", nonExistentCustomerId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isNotFound());
     }
 
 }
