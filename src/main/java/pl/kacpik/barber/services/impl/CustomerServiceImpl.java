@@ -1,8 +1,10 @@
 package pl.kacpik.barber.services.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.kacpik.barber.model.Customer;
+import pl.kacpik.barber.model.dto.CustomerDto;
 import pl.kacpik.barber.repositories.CustomerRepository;
 import pl.kacpik.barber.services.CustomerService;
 
@@ -32,6 +34,18 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Optional<Customer> getCustomerById(Long id) {
         return customerRepository.findById(id);
+    }
+
+    @Override
+    public Customer updateCustomer(long customerId, CustomerDto customerDto) {
+        Customer customer = getCustomerById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + customerId));
+
+        customer.setName(customerDto.getName());
+        customer.setLastName(customerDto.getLastName());
+        customer.setPhoneNumber(customerDto.getPhoneNumber());
+
+        return customer;
     }
 
 }

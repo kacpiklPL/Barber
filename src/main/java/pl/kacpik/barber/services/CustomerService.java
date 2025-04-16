@@ -1,6 +1,7 @@
 package pl.kacpik.barber.services;
 
 import pl.kacpik.barber.model.Customer;
+import pl.kacpik.barber.model.dto.CustomerDto;
 
 import java.util.Optional;
 
@@ -13,5 +14,7 @@ public interface CustomerService {
     Optional<Customer> getCustomerByPhoneNumber(String phoneNumber);
 
     Optional<Customer> getCustomerById(Long id);
+
+    Customer updateCustomer(long customerId, CustomerDto customerDto);
 
 }

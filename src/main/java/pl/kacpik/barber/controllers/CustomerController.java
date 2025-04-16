@@ -43,4 +43,10 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping(path = "/customers/{customerId}")
+    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable("customerId") Long customerId, @RequestBody CustomerDto customerDto){
+        Customer updatedCustomer = customerService.updateCustomer(customerId, customerDto);
+        return ResponseEntity.ok(customerMapper.mapTo(updatedCustomer));
+    }
+
 }

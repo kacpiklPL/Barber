@@ -1,6 +1,7 @@
 package pl.kacpik.barber.controlers;
 
 import com.google.gson.Gson;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -124,6 +125,33 @@ public class CustomerControllerTest {
 
         mockMvc.perform(delete("/customers/{customerId}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldUpdateCustomerSuccessfulIfExists() throws Exception {
+        Customer customer = createCustomer();
+        CustomerDto customerDto = createCustomerDto();
+
+        when(customerService.updateCustomer(1L, customerDto)).thenReturn(customer);
+        when(customerMapper.mapTo(customer)).thenReturn(customerDto);
+
+        mockMvc.perform(put("/customers/{customerId}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new Gson().toJson(customerDto))
+                )
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldReturnNotFoundWhenUpdatingNonExistingConsumer() throws Exception {
+        CustomerDto customerDto = createCustomerDto();
+        when(customerService.updateCustomer(1L, customerDto)).thenThrow(new EntityNotFoundException());
+
+        mockMvc.perform(put("/customers/{customerId}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new Gson().toJson(customerDto))
                 )
                 .andExpect(status().isNotFound());
     }
