@@ -35,4 +35,12 @@ public class CustomerController {
         return new ResponseEntity<>(customerMapper.mapTo(customer), HttpStatus.OK);
     }
 
+    @DeleteMapping(path = "/customers/{customerId}")
+    public ResponseEntity<Void> removeCustomer(@PathVariable("customerId") Long customerId){
+        Customer customer = customerService.getCustomerById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + customerId));
+        customerService.removeCustomer(customer);
+        return ResponseEntity.noContent().build();
+    }
+
 }

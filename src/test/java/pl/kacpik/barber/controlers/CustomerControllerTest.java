@@ -23,8 +23,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -103,6 +102,27 @@ public class CustomerControllerTest {
         when(customerService.getCustomerById(nonExistentCustomerId)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/customers/{customerId}", nonExistentCustomerId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldRemoveCustomerSuccessfulIfExists() throws Exception {
+        Customer customer = createCustomer();
+        when(customerService.getCustomerById(1L)).thenReturn(Optional.of(customer));
+
+        mockMvc.perform(delete("/customers/{customerId}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void shouldReturnNotFoundWhenDeletingNonExistingConsumer() throws Exception {
+        when(customerService.getCustomerById(1L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(delete("/customers/{customerId}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isNotFound());
