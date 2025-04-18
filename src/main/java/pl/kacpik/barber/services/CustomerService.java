@@ -13,7 +13,7 @@ public interface CustomerService {
 
     Optional<Customer> getCustomerByPhoneNumber(String phoneNumber);
 
-    Optional<Customer> getCustomerById(Long id);
+    Optional<Customer> getCustomerById(Long customerId);
 
     Customer updateCustomer(long customerId, CustomerDto customerDto);
 
