@@ -21,6 +21,11 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+    private Customer getCustomerOrThrow(Long customerId){
+        return customerService.getCustomerById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + customerId));
+    }
+
     @PostMapping(path = "/customers")
     public ResponseEntity<CustomerDto> createCustomer(@RequestBody CustomerDto customerDto){
         Customer customer = customerMapper.mapFrom(customerDto);
@@ -30,15 +35,13 @@ public class CustomerController {
 
     @GetMapping(path = "/customers/{customerId}")
     public ResponseEntity<CustomerDto> getCustomer(@PathVariable("customerId") Long customerId){
-        Customer customer = customerService.getCustomerById(customerId)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + customerId));
+        Customer customer = getCustomerOrThrow(customerId);
         return new ResponseEntity<>(customerMapper.mapTo(customer), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/customers/{customerId}")
     public ResponseEntity<Void> removeCustomer(@PathVariable("customerId") Long customerId){
-        Customer customer = customerService.getCustomerById(customerId)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + customerId));
+        Customer customer = getCustomerOrThrow(customerId);
         customerService.removeCustomer(customer);
         return ResponseEntity.noContent().build();
     }

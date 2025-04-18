@@ -31,13 +31,17 @@ public class CustomerServiceTest {
         customerRepository.deleteAll();
     }
 
-    @Test
-    public void shouldAddedCustomerToDatabase(){
-        Customer customer = Customer.builder()
+    private Customer createCustomer(){
+        return Customer.builder()
                 .name("testName")
                 .lastName("testLastName")
                 .phoneNumber("123456789")
                 .build();
+    }
+
+    @Test
+    public void shouldAddedCustomerToDatabase(){
+        Customer customer = createCustomer();
         customerService.addCustomer(customer);
 
         Iterable<Customer> result = customerRepository.findAll();
@@ -48,11 +52,7 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldRemoveCustomerFromDatabase(){
-        Customer customer = Customer.builder()
-                .name("testName")
-                .lastName("testLastName")
-                .phoneNumber("123456789")
-                .build();
+        Customer customer = createCustomer();
         Customer savedCustomer = customerService.addCustomer(customer);
 
         customerService.removeCustomer(customer);
@@ -61,11 +61,7 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldFindCustomerById(){
-        Customer customer = Customer.builder()
-                .name("testName")
-                .lastName("testLastName")
-                .phoneNumber("123456789")
-                .build();
+        Customer customer = createCustomer();
         Customer savedCustomer = customerService.addCustomer(customer);
 
         Optional<Customer> result = customerService.getCustomerById(savedCustomer.getId());
@@ -74,11 +70,7 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldReturnEmptyOptionalWhenCustomerNotFoundById(){
-        Customer customer = Customer.builder()
-                .name("testName")
-                .lastName("testLastName")
-                .phoneNumber("123456789")
-                .build();
+        Customer customer = createCustomer();
         Customer savedCustomer = customerService.addCustomer(customer);
 
         Optional<Customer> result = customerRepository.findById(savedCustomer.getId() + 1);
@@ -87,26 +79,17 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldFindCustomerByPhoneNumber(){
-        final String phoneNumber = "123456789";
-        Customer customer = Customer.builder()
-                .name("testName")
-                .lastName("testLastName")
-                .phoneNumber(phoneNumber)
-                .build();
+        Customer customer = createCustomer();
         Customer savedCustomer = customerService.addCustomer(customer);
 
-        Optional<Customer> result = customerService.getCustomerByPhoneNumber(phoneNumber);
+        Optional<Customer> result = customerService.getCustomerByPhoneNumber(customer.getPhoneNumber());
         assertTrue(result.isPresent());
         assertEquals(savedCustomer, result.get());
     }
 
     @Test
     public void shouldReturnEmptyOptionalWhenCustomerNotFoundByPhoneNumber(){
-        Customer customer = Customer.builder()
-                .name("testName")
-                .lastName("testLastName")
-                .phoneNumber("123456789")
-                .build();
+        Customer customer = createCustomer();
         customerService.addCustomer(customer);
 
         Optional<Customer> result = customerService.getCustomerByPhoneNumber("000000000");
@@ -115,11 +98,7 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldUpdateCustomerSuccessful() {
-        Customer customer = Customer.builder()
-                .name("testName")
-                .lastName("testLastName")
-                .phoneNumber("123456789")
-                .build();
+        Customer customer = createCustomer();
         Customer savedCustomer = customerService.addCustomer(customer);
         CustomerDto customerDto = new CustomerDto(savedCustomer.getId(), "Klaudia", "Kowalska", "111111111");
 

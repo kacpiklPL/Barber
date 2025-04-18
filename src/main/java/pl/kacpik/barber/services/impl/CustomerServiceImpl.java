@@ -32,20 +32,22 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<Customer> getCustomerById(Long id) {
-        return customerRepository.findById(id);
+    public Optional<Customer> getCustomerById(Long customerId) {
+        return customerRepository.findById(customerId);
     }
 
     @Override
     public Customer updateCustomer(long customerId, CustomerDto customerDto) {
         Customer customer = getCustomerById(customerId)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + customerId));
+        updateCustomerFromDto(customer, customerDto);
+        return customer;
+    }
 
+    private void updateCustomerFromDto(Customer customer, CustomerDto customerDto){
         customer.setName(customerDto.getName());
         customer.setLastName(customerDto.getLastName());
         customer.setPhoneNumber(customerDto.getPhoneNumber());
-
-        return customer;
     }
 
 }
