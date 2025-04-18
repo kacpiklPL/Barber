@@ -1,6 +1,7 @@
 package pl.kacpik.barber.services;
 
 import pl.kacpik.barber.model.Employee;
+import pl.kacpik.barber.model.dto.EmployeeDto;
 
 import java.util.Optional;
 
@@ -13,5 +14,7 @@ public interface EmployeeService {
     Optional<Employee> getEmployeeById(long id);
 
     Optional<Employee> getEmployeeByPesel(String pesel);
+
+    Employee updateEmployee(long employeeId, EmployeeDto employeeDto);
 
 }

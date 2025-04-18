@@ -1,8 +1,10 @@
 package pl.kacpik.barber.services.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.kacpik.barber.model.Employee;
+import pl.kacpik.barber.model.dto.EmployeeDto;
 import pl.kacpik.barber.repositories.EmployeeRepository;
 import pl.kacpik.barber.services.EmployeeService;
 
@@ -32,5 +34,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Optional<Employee> getEmployeeByPesel(String pesel) {
         return employeeRepository.findByPesel(pesel);
+    }
+
+    @Override
+    public Employee updateEmployee(long employeeId, EmployeeDto employeeDto) {
+        Employee employee = getEmployeeById(employeeId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        employee.setName(employeeDto.getName());
+        employee.setLastName(employeeDto.getLastName());
+        employee.setPesel(employeeDto.getPesel());
+        employee.setBirthday(employeeDto.getBirthday());
+
+        return employee;
     }
 }

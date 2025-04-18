@@ -127,4 +127,18 @@ public class EmployeeControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void shouldUpdateEmployeeSuccessfulIfExists() throws Exception {
+        Employee employee = createEmployee();
+        EmployeeDto employeeDto = createEmployeeDto();
+        String content = objectMapper.writeValueAsString(employeeDto);
+
+        when(employeeService.updateEmployee(1L, employeeDto)).thenReturn(employee);
+
+        mockMvc.perform(put("/employees/{employeeId}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
+                .andExpect(status().isOk());
+    }
 }
