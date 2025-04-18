@@ -11,7 +11,7 @@ public interface EmployeeService {
 
     void removeEmployee(Employee employee);
 
-    Optional<Employee> getEmployeeById(long id);
+    Optional<Employee> getEmployeeById(long employeeId);
 
     Optional<Employee> getEmployeeByPesel(String pesel);
 
