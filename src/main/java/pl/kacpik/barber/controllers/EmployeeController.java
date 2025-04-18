@@ -1,8 +1,14 @@
 package pl.kacpik.barber.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.kacpik.barber.mappers.EmployeeMapperImpl;
+import pl.kacpik.barber.model.Employee;
+import pl.kacpik.barber.model.dto.EmployeeDto;
 import pl.kacpik.barber.services.EmployeeService;
 
 @RestController
@@ -13,5 +19,12 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @PostMapping(path = "/employees")
+    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto){
+        Employee employee = employeeMapper.mapFrom(employeeDto);
+        Employee savedEmployee = employeeService.addEmployee(employee);
+        return new ResponseEntity<>(employeeMapper.mapTo(savedEmployee), HttpStatus.CREATED);
+    }
 
 }

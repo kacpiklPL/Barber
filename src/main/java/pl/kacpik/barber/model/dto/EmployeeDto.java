@@ -1,5 +1,6 @@
 package pl.kacpik.barber.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,8 +18,11 @@ public class EmployeeDto {
 
     private String pesel;
 
+    private String name;
+
     private String lastName;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
 }
