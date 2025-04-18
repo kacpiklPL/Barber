@@ -40,12 +40,14 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer updateCustomer(long customerId, CustomerDto customerDto) {
         Customer customer = getCustomerById(customerId)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + customerId));
+        updateCustomerFromDto(customer, customerDto);
+        return customer;
+    }
 
+    private void updateCustomerFromDto(Customer customer, CustomerDto customerDto){
         customer.setName(customerDto.getName());
         customer.setLastName(customerDto.getLastName());
         customer.setPhoneNumber(customerDto.getPhoneNumber());
-
-        return customer;
     }
 
 }
