@@ -27,8 +27,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Optional<Employee> getEmployeeById(long id) {
-        return employeeRepository.findById(id);
+    public Optional<Employee> getEmployeeById(long employeeId) {
+        return employeeRepository.findById(employeeId);
     }
 
     @Override
@@ -40,12 +40,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee updateEmployee(long employeeId, EmployeeDto employeeDto) {
         Employee employee = getEmployeeById(employeeId)
                 .orElseThrow(EntityNotFoundException::new);
+        updateEmployeeFromDto(employee, employeeDto);
+        return employee;
+    }
 
+    private void updateEmployeeFromDto(Employee employee, EmployeeDto employeeDto){
         employee.setName(employeeDto.getName());
         employee.setLastName(employeeDto.getLastName());
         employee.setPesel(employeeDto.getPesel());
         employee.setBirthday(employeeDto.getBirthday());
-
-        return employee;
     }
 }
