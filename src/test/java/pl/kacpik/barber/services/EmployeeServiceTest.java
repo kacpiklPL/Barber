@@ -30,14 +30,18 @@ public class EmployeeServiceTest {
         employeeRepository.deleteAll();
     }
 
-    @Test
-    public void shouldAddedEmployeeToDatabase(){
-        Employee employee = Employee.builder()
+    private Employee createEmployee(){
+        return Employee.builder()
                 .pesel("00000000000")
                 .name("testName")
                 .lastName("testLastName")
                 .birthday(LocalDate.of(2000,1, 27))
                 .build();
+    }
+
+    @Test
+    public void shouldAddedEmployeeToDatabase(){
+        Employee employee = createEmployee();
         employeeService.addEmployee(employee);
 
         Iterable<Employee> result = employeeRepository.findAll();
@@ -48,12 +52,7 @@ public class EmployeeServiceTest {
 
     @Test
     public void shouldRemoveEmployeeFromDatabase(){
-        Employee employee = Employee.builder()
-                .pesel("00000000000")
-                .name("testName")
-                .lastName("testLastName")
-                .birthday(LocalDate.of(2000,1, 27))
-                .build();
+        Employee employee = createEmployee();
         Employee savedEmployee = employeeService.addEmployee(employee);
 
         employeeService.removeEmployee(savedEmployee);
@@ -64,12 +63,7 @@ public class EmployeeServiceTest {
 
     @Test
     public void shouldFindEmployeeById(){
-        Employee employee = Employee.builder()
-                .pesel("00000000000")
-                .name("testName")
-                .lastName("testLastName")
-                .birthday(LocalDate.of(2000,1, 27))
-                .build();
+        Employee employee = createEmployee();
         Employee savedEmployed = employeeRepository.save(employee);
 
         Optional<Employee> result = employeeService.getEmployeeById(savedEmployed.getId());
@@ -79,12 +73,7 @@ public class EmployeeServiceTest {
 
     @Test
     public void shouldReturnEmptyOptionalWhenEmployeeNotFoundById(){
-        Employee employee = Employee.builder()
-                .pesel("00000000000")
-                .name("testName")
-                .lastName("testLastName")
-                .birthday(LocalDate.of(2000,1, 27))
-                .build();
+        Employee employee = createEmployee();
         Employee savedEmployed = employeeRepository.save(employee);
 
         Optional<Employee> result = employeeService.getEmployeeById(savedEmployed.getId() + 1);
@@ -93,12 +82,7 @@ public class EmployeeServiceTest {
 
     @Test
     public void shouldFindEmployeeByPesel(){
-        Employee employee = Employee.builder()
-                .pesel("00000000000")
-                .name("testName")
-                .lastName("testLastName")
-                .birthday(LocalDate.of(2000,1, 27))
-                .build();
+        Employee employee = createEmployee();
         Employee savedEmployed = employeeRepository.save(employee);
 
         Optional<Employee> result = employeeService.getEmployeeByPesel("00000000000");
@@ -108,12 +92,7 @@ public class EmployeeServiceTest {
 
     @Test
     public void shouldReturnEmptyOptionalWhenEmployeeNotFoundByPesel(){
-        Employee employee = Employee.builder()
-                .pesel("00000000000")
-                .name("testName")
-                .lastName("testLastName")
-                .birthday(LocalDate.of(2000,1, 27))
-                .build();
+        Employee employee = createEmployee();
         employeeRepository.save(employee);
 
         Optional<Employee> result = employeeService.getEmployeeByPesel("00000000999");
@@ -123,12 +102,7 @@ public class EmployeeServiceTest {
     @Test
     public void shouldUpdateEmployeeSuccessfulIfExists() {
         //given
-        Employee employee = Employee.builder()
-                .pesel("00000000000")
-                .name("testName")
-                .lastName("testLastName")
-                .birthday(LocalDate.of(2000,1, 27))
-                .build();
+        Employee employee = createEmployee();
         Employee savedEmployee = employeeService.addEmployee(employee);
         EmployeeDto employeeDto = new EmployeeDto(savedEmployee.getId() + 1L, "123123123", "Kacper", "Nowak", LocalDate.of(2000,1,27));
 
