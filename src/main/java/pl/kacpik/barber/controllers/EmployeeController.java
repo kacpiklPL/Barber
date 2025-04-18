@@ -33,4 +33,12 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeMapper.mapTo(employee), HttpStatus.CREATED);
     }
 
+    @DeleteMapping(path = "/employees/{employeeId}")
+    public ResponseEntity<Void> removeEmployee(@PathVariable("employeeId") Long employeeId){
+        Employee employee = employeeService.getEmployeeById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + employeeId));
+        employeeService.removeEmployee(employee);
+        return ResponseEntity.noContent().build();
+    }
+
 }

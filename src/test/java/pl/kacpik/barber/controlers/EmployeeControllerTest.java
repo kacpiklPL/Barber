@@ -21,8 +21,7 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -110,4 +109,22 @@ public class EmployeeControllerTest {
                 ).andExpect(status().isNotFound());
     }
 
+    @Test
+    public void shouldRemoveEmployeeSuccessfulIfExists() throws Exception {
+        Employee employee = createEmployee();
+        when(employeeService.getEmployeeById(1L)).thenReturn(Optional.of(employee));
+
+        mockMvc.perform(delete("/employees/{employeeId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void shouldReturnNotFoundWhenDeletingNonExistingEmployee() throws Exception {
+        when(employeeService.getEmployeeById(1L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(delete("/employees/{employeeId}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 }
