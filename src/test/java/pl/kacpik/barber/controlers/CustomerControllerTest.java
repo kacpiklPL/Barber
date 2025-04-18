@@ -13,17 +13,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import pl.kacpik.barber.mappers.CustomerMapperImpl;
 import pl.kacpik.barber.model.Customer;
 import pl.kacpik.barber.model.dto.CustomerDto;
-import pl.kacpik.barber.repositories.CustomerRepository;
 import pl.kacpik.barber.services.CustomerService;
 
 import java.util.Optional;
 
-import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.mockito.ArgumentMatchers.isNotNull;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
