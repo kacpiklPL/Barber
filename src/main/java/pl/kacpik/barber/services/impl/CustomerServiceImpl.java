@@ -3,6 +3,7 @@ package pl.kacpik.barber.services.impl;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.kacpik.barber.exceptions.DuplicatePhoneNumberException;
 import pl.kacpik.barber.model.Customer;
 import pl.kacpik.barber.model.dto.CustomerDto;
 import pl.kacpik.barber.repositories.CustomerRepository;
@@ -18,7 +19,14 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer addCustomer(Customer customer) {
+        if(existsByPhoneNumber(customer.getPhoneNumber())){
+            throw new DuplicatePhoneNumberException("Phone number already in use: " + customer.getPhoneNumber());
+        }
         return customerRepository.save(customer);
+    }
+
+    private boolean existsByPhoneNumber(String phoneNumber){
+        return getCustomerByPhoneNumber(phoneNumber).isPresent();
     }
 
     @Override

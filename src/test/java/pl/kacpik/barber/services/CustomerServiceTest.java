@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import pl.kacpik.barber.exceptions.DuplicatePhoneNumberException;
 import pl.kacpik.barber.model.Customer;
 import pl.kacpik.barber.model.dto.CustomerDto;
 import pl.kacpik.barber.repositories.CustomerRepository;
@@ -48,6 +49,15 @@ public class CustomerServiceTest {
         assertThat(result)
                 .hasSize(1).
                 containsExactly(customer);
+    }
+
+    @Test
+    public void shouldFailSavingCustomerWithDuplicatePhoneNumber(){
+        Customer customer_1 = createCustomer();
+        Customer customer_2 = createCustomer();
+        customerService.addCustomer(customer_1);
+
+        assertThrows(DuplicatePhoneNumberException.class, () -> customerService.addCustomer(customer_2));
     }
 
     @Test

@@ -25,6 +25,7 @@ public class Customer {
 
     private String lastName;
 
+    @Column(unique = true)
     private String phoneNumber;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
