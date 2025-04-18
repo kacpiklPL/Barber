@@ -1,9 +1,11 @@
 package pl.kacpik.barber.mappers;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 import pl.kacpik.barber.model.Employee;
 import pl.kacpik.barber.model.dto.EmployeeDto;
 
+@Component
 public class EmployeeMapperImpl implements Mapper<Employee, EmployeeDto> {
 
     private final ModelMapper modelMapper = new ModelMapper();
