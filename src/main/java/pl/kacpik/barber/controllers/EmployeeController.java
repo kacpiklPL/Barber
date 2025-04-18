@@ -19,6 +19,11 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    private Employee getEmployeeOrThrow(long employeeId){
+        return employeeService.getEmployeeById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + employeeId));
+    }
+
     @PostMapping(path = "/employees")
     public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto){
         Employee employee = employeeMapper.mapFrom(employeeDto);
@@ -28,15 +33,13 @@ public class EmployeeController {
 
     @GetMapping(path = "/employees/{employeeId}")
     public ResponseEntity<EmployeeDto> getEmployee(@PathVariable("employeeId") Long employeeId){
-        Employee employee = employeeService.getEmployeeById(employeeId)
-                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + employeeId));
+        Employee employee = getEmployeeOrThrow(employeeId);
         return new ResponseEntity<>(employeeMapper.mapTo(employee), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/employees/{employeeId}")
     public ResponseEntity<Void> removeEmployee(@PathVariable("employeeId") Long employeeId){
-        Employee employee = employeeService.getEmployeeById(employeeId)
-                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + employeeId));
+        Employee employee = getEmployeeOrThrow(employeeId);
         employeeService.removeEmployee(employee);
         return ResponseEntity.noContent().build();
     }
