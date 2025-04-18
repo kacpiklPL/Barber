@@ -2,7 +2,7 @@ package pl.kacpik.barber.controlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,7 +32,7 @@ public class EmployeeControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
+    @MockitoBean
     private EmployeeService employeeService;
 
     @Autowired
@@ -50,10 +50,23 @@ public class EmployeeControllerTest {
                 .build();
     }
 
+    private Employee createEmployee(){
+        return Employee.builder()
+                .name("Kacper")
+                .lastName("Nowak")
+                .pesel("00000000000")
+                .birthday(LocalDate.of(2000, 1, 27))
+                .build();
+    }
+
     @Test
     public void shouldCreateAndReturnEmployee() throws Exception{
         EmployeeDto employeeDto = createEmployeeDto();
+        Employee employee = employeeMapper.mapFrom(employeeDto);
+        employee.setId(1L);
         String content = objectMapper.writeValueAsString(employeeDto);
+
+        when(employeeService.addEmployee(ArgumentMatchers.any())).thenReturn(employee);
 
         MvcResult result = mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -65,25 +78,19 @@ public class EmployeeControllerTest {
         EmployeeDto resultEmployeeDto = objectMapper.readValue(json, EmployeeDto.class);
 
         assertThat(resultEmployeeDto, notNullValue());
-        assertThat(resultEmployeeDto.getId(), notNullValue());
-        assertThat(resultEmployeeDto.getId(), greaterThan(0L));
-        assertThat(resultEmployeeDto.getName(), equalTo(employeeDto.getName()));
-        assertThat(resultEmployeeDto.getLastName(), equalTo(employeeDto.getLastName()));
-        assertThat(resultEmployeeDto.getPesel(), equalTo(employeeDto.getPesel()));
-        assertThat(resultEmployeeDto.getBirthday(), equalTo(employeeDto.getBirthday()));
+        assertThat(resultEmployeeDto.getId(), is(1L));
+        assertThat(resultEmployeeDto.getName(), is(employee.getName()));
+        assertThat(resultEmployeeDto.getLastName(), is(employee.getLastName()));
+        assertThat(resultEmployeeDto.getPesel(), is(employee.getPesel()));
     }
 
     @Test
     public void shouldReturnEmployeeWhenExists() throws Exception{
-        Employee employee = Employee.builder()
-                .name("name")
-                .lastName("lastname")
-                .pesel("123123123")
-                .birthday(LocalDate.of(2000, 1, 27))
-                .build();
-        Employee savedEmployee = employeeService.addEmployee(employee);
+        Employee employee = createEmployee();
+        employee.setId(1L);
+        when(employeeService.getEmployeeById(1L)).thenReturn(Optional.of(employee));
 
-        MvcResult result = mockMvc.perform(get("/employees/{employeeId}", savedEmployee.getId())
+        MvcResult result = mockMvc.perform(get("/employees/{employeeId}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isCreated())
                 .andReturn();
@@ -93,7 +100,7 @@ public class EmployeeControllerTest {
         Employee resultEmployee = employeeMapper.mapFrom(resultEmployeeDto);
 
         assertThat(resultEmployeeDto, notNullValue());
-        assertThat(resultEmployee, equalTo(savedEmployee));
+        assertThat(resultEmployee, equalTo(employee));
     }
 
     @Test
