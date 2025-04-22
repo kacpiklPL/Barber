@@ -71,7 +71,7 @@ public class CustomerAccessServiceTest {
 
     @Transactional
     @Test
-    public void shouldRemoveCustomerAccessFromDatabase(){
+    public void shouldRemoveCustomerAccessFromDatabaseByCustomerAccess(){
         Customer customer = createCustomer();
         CustomerAccess customerAccess = customerAccessService.getOrCreateCustomerAccess(customer);
 
@@ -80,5 +80,20 @@ public class CustomerAccessServiceTest {
         Optional<CustomerAccess> optionalCustomerAccess = customerAccessServiceRepository.findById(customerAccess.getToken());
         assertTrue(optionalCustomerAccess.isEmpty());
     }
+
+    @Transactional
+    @Test
+    public void shouldRemoveCustomerAccessFromDatabaseByToken(){
+        Customer customer = createCustomer();
+        CustomerAccess customerAccess = customerAccessService.getOrCreateCustomerAccess(customer);
+
+        final String token = customerAccess.getToken();
+        customerAccessService.removeCustomerAccess(token);
+
+        Optional<CustomerAccess> optionalCustomerAccess = customerAccessServiceRepository.findById(token);
+        assertTrue(optionalCustomerAccess.isEmpty());
+    }
+
+
 
 }

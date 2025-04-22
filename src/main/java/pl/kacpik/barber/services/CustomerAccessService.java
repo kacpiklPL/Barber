@@ -9,4 +9,6 @@ public interface CustomerAccessService {
 
     void removeCustomerAccess(CustomerAccess customerAccess);
 
+    void removeCustomerAccess(String token);
+
 }

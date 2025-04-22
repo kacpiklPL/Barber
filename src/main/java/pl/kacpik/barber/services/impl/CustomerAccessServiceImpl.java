@@ -7,6 +7,8 @@ import pl.kacpik.barber.model.CustomerAccess;
 import pl.kacpik.barber.repositories.CustomerAccessServiceRepository;
 import pl.kacpik.barber.services.CustomerAccessService;
 
+import java.util.Optional;
+
 @Service
 public class CustomerAccessServiceImpl implements CustomerAccessService {
 
@@ -25,6 +27,12 @@ public class CustomerAccessServiceImpl implements CustomerAccessService {
     @Override
     public void removeCustomerAccess(CustomerAccess customerAccess) {
         customerAccessServiceRepository.delete(customerAccess);
+    }
+
+    @Override
+    public void removeCustomerAccess(String token) {
+        Optional<CustomerAccess> customerAccess = customerAccessServiceRepository.findById(token);
+        customerAccess.ifPresent(this::removeCustomerAccess);
     }
 
     private CustomerAccess createAndSaveNewCustomerAccess(Customer customer){
