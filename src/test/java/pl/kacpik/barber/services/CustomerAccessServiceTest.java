@@ -94,6 +94,26 @@ public class CustomerAccessServiceTest {
         assertTrue(optionalCustomerAccess.isEmpty());
     }
 
+    @Test
+    public void shouldFindCustomerAccessByTokenId(){
+        Customer customer = createCustomer();
+        CustomerAccess customerAccess = customerAccessService.getOrCreateCustomerAccess(customer);
+
+        Optional<CustomerAccess> optionalCustomerAccess = customerAccessServiceRepository.findById(customerAccess.getToken());
+
+        assertTrue(optionalCustomerAccess.isPresent());
+        assertEquals(customerAccess, optionalCustomerAccess.get());
+    }
+
+    @Test
+    public void shouldReturnEmptyOptionalWhenCustomerAccessNotFoundByTokenId(){
+        Customer customer = createCustomer();
+        customerAccessService.getOrCreateCustomerAccess(customer);
+
+        Optional<CustomerAccess> optionalCustomerAccess = customerAccessService.getCustomerAccess("ABC");
+        assertTrue(optionalCustomerAccess.isEmpty());
+    }
+
 
 
 }

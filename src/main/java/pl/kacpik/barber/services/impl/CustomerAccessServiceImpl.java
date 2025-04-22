@@ -16,6 +16,11 @@ public class CustomerAccessServiceImpl implements CustomerAccessService {
     private CustomerAccessServiceRepository customerAccessServiceRepository;
 
     @Override
+    public Optional<CustomerAccess> getCustomerAccess(String token) {
+        return customerAccessServiceRepository.findById(token);
+    }
+
+    @Override
     public CustomerAccess getOrCreateCustomerAccess(Customer customer) {
         CustomerAccess customerAccess = customer.getCustomerAccess();
         if (customerAccess == null) {
