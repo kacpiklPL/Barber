@@ -7,4 +7,6 @@ public interface CustomerAccessService {
 
     CustomerAccess getOrCreateCustomerAccess(Customer customer);
 
+    void removeCustomerAccess(CustomerAccess customerAccess);
+
 }

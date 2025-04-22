@@ -22,6 +22,11 @@ public class CustomerAccessServiceImpl implements CustomerAccessService {
         return customerAccess;
     }
 
+    @Override
+    public void removeCustomerAccess(CustomerAccess customerAccess) {
+        customerAccessServiceRepository.delete(customerAccess);
+    }
+
     private CustomerAccess createAndSaveNewCustomerAccess(Customer customer){
         CustomerAccess customerAccess = CustomerAccess.builder()
                 .token(customer.getId() + "")

@@ -1,5 +1,6 @@
 package pl.kacpik.barber.services;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import pl.kacpik.barber.model.Customer;
 import pl.kacpik.barber.model.CustomerAccess;
 import pl.kacpik.barber.repositories.CustomerAccessServiceRepository;
 import pl.kacpik.barber.repositories.CustomerRepository;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -64,6 +67,18 @@ public class CustomerAccessServiceTest {
                 .hasSize(1).
                 containsExactly(customerAccess);
         assertEquals(customerAccess, customerAccess2);
+    }
+
+    @Transactional
+    @Test
+    public void shouldRemoveCustomerAccessFromDatabase(){
+        Customer customer = createCustomer();
+        CustomerAccess customerAccess = customerAccessService.getOrCreateCustomerAccess(customer);
+
+        customerAccessService.removeCustomerAccess(customerAccess);
+
+        Optional<CustomerAccess> optionalCustomerAccess = customerAccessServiceRepository.findById(customerAccess.getToken());
+        assertTrue(optionalCustomerAccess.isEmpty());
     }
 
 }
