@@ -31,6 +31,9 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Reservation> reservations;
 
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private CustomerAccess customerAccess;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
