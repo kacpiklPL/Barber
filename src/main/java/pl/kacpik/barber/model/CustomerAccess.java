@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = "customer_access")
@@ -18,7 +19,8 @@ public class CustomerAccess {
 
     @Id
     @Column(unique = true)
-    private String token;
+    @Builder.Default
+    private String token = UUID.randomUUID().toString().replace("-", "").substring(0, 12);
 
     @OneToOne
     @JoinColumn(name = "customer_id", nullable = false)
