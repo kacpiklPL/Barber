@@ -22,11 +22,8 @@ public class CustomerAccessServiceImpl implements CustomerAccessService {
 
     @Override
     public CustomerAccess getOrCreateCustomerAccess(Customer customer) {
-        CustomerAccess customerAccess = customer.getCustomerAccess();
-        if (customerAccess == null) {
-            return createAndSaveNewCustomerAccess(customer);
-        }
-        return customerAccess;
+        Optional<CustomerAccess> customerAccess = customerAccessServiceRepository.findByCustomerId(customer.getId());
+        return customerAccess.orElseGet(() -> createAndSaveNewCustomerAccess(customer));
     }
 
     @Override
@@ -42,7 +39,7 @@ public class CustomerAccessServiceImpl implements CustomerAccessService {
 
     private CustomerAccess createAndSaveNewCustomerAccess(Customer customer){
         CustomerAccess customerAccess = CustomerAccess.builder()
-                .token(customer.getId() + "")
+                //.token(customer.getId() + "")
                 .customer(customer)
                 .build();
         customerAccessServiceRepository.save(customerAccess);
