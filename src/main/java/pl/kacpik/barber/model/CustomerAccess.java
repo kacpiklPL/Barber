@@ -20,7 +20,7 @@ public class CustomerAccess {
     @Id
     @Column(unique = true)
     @Builder.Default
-    private String token = UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+    private String token = UUID.randomUUID().toString().replace("-", "").substring(0, 24).toUpperCase();
 
     @OneToOne
     @JoinColumn(name = "customer_id", nullable = false)
