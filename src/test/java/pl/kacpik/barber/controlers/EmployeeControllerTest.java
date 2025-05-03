@@ -68,7 +68,7 @@ public class EmployeeControllerTest {
 
         when(employeeService.addEmployee(ArgumentMatchers.any())).thenReturn(employee);
 
-        MvcResult result = mockMvc.perform(post("/employees")
+        MvcResult result = mockMvc.perform(post("/api/admin/employees")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
@@ -91,7 +91,7 @@ public class EmployeeControllerTest {
         employee.setId(1L);
         when(employeeService.getEmployeeById(1L)).thenReturn(Optional.of(employee));
 
-        MvcResult result = mockMvc.perform(get("/employees/{employeeId}", 1L)
+        MvcResult result = mockMvc.perform(get("/api/admin/employees/{employeeId}", 1L)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isCreated())
@@ -107,7 +107,7 @@ public class EmployeeControllerTest {
 
     @Test
     public void shouldReturnNotFoundWhenEmployeeNotExists() throws Exception {
-        mockMvc.perform(get("/employees/{employeeId}", 1)
+        mockMvc.perform(get("/api/admin/employees/{employeeId}", 1)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isNotFound());
@@ -118,7 +118,7 @@ public class EmployeeControllerTest {
         Employee employee = createEmployee();
         when(employeeService.getEmployeeById(1L)).thenReturn(Optional.of(employee));
 
-        mockMvc.perform(delete("/employees/{employeeId}", 1L)
+        mockMvc.perform(delete("/api/admin/employees/{employeeId}", 1L)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -128,7 +128,7 @@ public class EmployeeControllerTest {
     public void shouldReturnNotFoundWhenDeletingNonExistingEmployee() throws Exception {
         when(employeeService.getEmployeeById(1L)).thenReturn(Optional.empty());
 
-        mockMvc.perform(delete("/employees/{employeeId}", 1L)
+        mockMvc.perform(delete("/api/admin/employees/{employeeId}", 1L)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -142,7 +142,7 @@ public class EmployeeControllerTest {
 
         when(employeeService.updateEmployee(1L, employeeDto)).thenReturn(employee);
 
-        mockMvc.perform(put("/employees/{employeeId}", 1L)
+        mockMvc.perform(put("/api/admin/employees/{employeeId}", 1L)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))

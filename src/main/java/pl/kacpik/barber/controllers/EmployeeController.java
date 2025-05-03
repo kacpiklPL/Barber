@@ -10,6 +10,7 @@ import pl.kacpik.barber.model.Employee;
 import pl.kacpik.barber.model.dto.EmployeeDto;
 import pl.kacpik.barber.services.EmployeeService;
 
+@RequestMapping("/api/admin")
 @RestController
 public class EmployeeController {
 
