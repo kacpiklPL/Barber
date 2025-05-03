@@ -13,11 +13,15 @@ import pl.kacpik.barber.services.EmployeeService;
 @RestController
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeMapperImpl employeeMapper;
+    private final EmployeeMapperImpl employeeMapper;
+
+    private final EmployeeService employeeService;
 
     @Autowired
-    private EmployeeService employeeService;
+    public EmployeeController(EmployeeMapperImpl employeeMapper, EmployeeService employeeService) {
+        this.employeeMapper = employeeMapper;
+        this.employeeService = employeeService;
+    }
 
     private Employee getEmployeeOrThrow(long employeeId){
         return employeeService.getEmployeeById(employeeId)

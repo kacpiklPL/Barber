@@ -13,8 +13,12 @@ import java.util.Optional;
 @Service
 public class CompanyServiceServiceImpl implements CompanyServiceService {
 
+    private final CompanyServiceRepository companyServiceRepository;
+
     @Autowired
-    private CompanyServiceRepository companyServiceRepository;
+    public CompanyServiceServiceImpl(CompanyServiceRepository companyServiceRepository) {
+        this.companyServiceRepository = companyServiceRepository;
+    }
 
     @Override
     public CompanyService addCompanyService(CompanyService companyService) {

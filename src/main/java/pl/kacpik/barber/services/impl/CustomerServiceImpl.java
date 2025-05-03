@@ -14,8 +14,12 @@ import java.util.Optional;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
+    private final CustomerRepository customerRepository;
+
     @Autowired
-    private CustomerRepository customerRepository;
+    public CustomerServiceImpl(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+    }
 
     @Override
     public Customer addCustomer(Customer customer) {

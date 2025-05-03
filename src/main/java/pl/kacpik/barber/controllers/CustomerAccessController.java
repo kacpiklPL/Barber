@@ -19,14 +19,18 @@ import pl.kacpik.barber.utils.QRCodeGenerator;
 @RestController
 public class CustomerAccessController {
 
-    @Autowired
-    private CustomerAccessService customerAccessService;
+    private final CustomerAccessService customerAccessService;
 
-    @Autowired
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
-    @Autowired
     private QRCodeGenerator qrCodeGenerator;
+
+    @Autowired
+    public CustomerAccessController(CustomerAccessService customerAccessService, CustomerService customerService, QRCodeGenerator qrCodeGenerator) {
+        this.customerAccessService = customerAccessService;
+        this.customerService = customerService;
+        this.qrCodeGenerator = qrCodeGenerator;
+    }
 
     @GetMapping(path = "/customers/{customerId}/qrcode")
     public ResponseEntity<byte[]> getCustomerAccess(@PathVariable Long customerId){

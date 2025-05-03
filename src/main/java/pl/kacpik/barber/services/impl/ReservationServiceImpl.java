@@ -13,11 +13,15 @@ import java.util.Optional;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-    @Autowired
-    private ReservationRepository reservationRepository;
+    private final ReservationRepository reservationRepository;
+
+    private final CompanyServiceRepository companyServiceRepository;
 
     @Autowired
-    private CompanyServiceRepository companyServiceRepository;
+    public ReservationServiceImpl(ReservationRepository reservationRepository, CompanyServiceRepository companyServiceRepository) {
+        this.reservationRepository = reservationRepository;
+        this.companyServiceRepository = companyServiceRepository;
+    }
 
     @Override
     public Reservation addReservation(Reservation reservation) {

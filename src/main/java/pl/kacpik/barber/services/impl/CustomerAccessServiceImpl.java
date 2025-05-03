@@ -12,8 +12,12 @@ import java.util.Optional;
 @Service
 public class CustomerAccessServiceImpl implements CustomerAccessService {
 
+    private final CustomerAccessServiceRepository customerAccessServiceRepository;
+
     @Autowired
-    private CustomerAccessServiceRepository customerAccessServiceRepository;
+    public CustomerAccessServiceImpl(CustomerAccessServiceRepository customerAccessServiceRepository) {
+        this.customerAccessServiceRepository = customerAccessServiceRepository;
+    }
 
     @Override
     public Optional<CustomerAccess> getCustomerAccess(String token) {

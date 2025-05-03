@@ -15,11 +15,15 @@ import java.util.Optional;
 @RestController
 public class CustomerController {
 
-    @Autowired
-    private CustomerMapperImpl customerMapper;
+    private final CustomerMapperImpl customerMapper;
+
+    private final CustomerService customerService;
 
     @Autowired
-    private CustomerService customerService;
+    public CustomerController(CustomerMapperImpl customerMapper, CustomerService customerService) {
+        this.customerMapper = customerMapper;
+        this.customerService = customerService;
+    }
 
     private Customer getCustomerOrThrow(Long customerId){
         return customerService.getCustomerById(customerId)
