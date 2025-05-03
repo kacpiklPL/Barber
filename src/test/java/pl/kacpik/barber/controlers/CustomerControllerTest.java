@@ -48,7 +48,7 @@ public class CustomerControllerTest {
                 }
                 """;
 
-        mockMvc.perform(post("/customers")
+        mockMvc.perform(post("/api/employees/customers")
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonValue)
@@ -81,7 +81,7 @@ public class CustomerControllerTest {
         when(customerService.getCustomerById(1L)).thenReturn(Optional.of(customer));
         when(customerMapper.mapTo(customer)).thenReturn(customerDto);
 
-        MvcResult result = mockMvc.perform(get("/customers/{customerId}", 1L)
+        MvcResult result = mockMvc.perform(get("/api/employees/customers/{customerId}", 1L)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -103,7 +103,7 @@ public class CustomerControllerTest {
         long nonExistentCustomerId = 1L;
         when(customerService.getCustomerById(nonExistentCustomerId)).thenReturn(Optional.empty());
 
-        mockMvc.perform(get("/customers/{customerId}", nonExistentCustomerId)
+        mockMvc.perform(get("/api/employees/customers/{customerId}", nonExistentCustomerId)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -115,7 +115,7 @@ public class CustomerControllerTest {
         Customer customer = createCustomer();
         when(customerService.getCustomerById(1L)).thenReturn(Optional.of(customer));
 
-        mockMvc.perform(delete("/customers/{customerId}", 1L)
+        mockMvc.perform(delete("/api/employees/customers/{customerId}", 1L)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -126,7 +126,7 @@ public class CustomerControllerTest {
     public void shouldReturnNotFoundWhenDeletingNonExistingConsumer() throws Exception {
         when(customerService.getCustomerById(1L)).thenReturn(Optional.empty());
 
-        mockMvc.perform(delete("/customers/{customerId}", 1L)
+        mockMvc.perform(delete("/api/employees/customers/{customerId}", 1L)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -141,7 +141,7 @@ public class CustomerControllerTest {
         when(customerService.updateCustomer(1L, customerDto)).thenReturn(customer);
         when(customerMapper.mapTo(customer)).thenReturn(customerDto);
 
-        mockMvc.perform(put("/customers/{customerId}", 1L)
+        mockMvc.perform(put("/api/employees/customers/{customerId}", 1L)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new Gson().toJson(customerDto))
@@ -154,7 +154,7 @@ public class CustomerControllerTest {
         CustomerDto customerDto = createCustomerDto();
         when(customerService.updateCustomer(1L, customerDto)).thenThrow(new EntityNotFoundException());
 
-        mockMvc.perform(put("/customers/{customerId}", 1L)
+        mockMvc.perform(put("/api/employees/customers/{customerId}", 1L)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new Gson().toJson(customerDto))

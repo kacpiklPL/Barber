@@ -12,6 +12,7 @@ import pl.kacpik.barber.services.CustomerService;
 
 import java.util.Optional;
 
+@RequestMapping("/api/employees")
 @RestController
 public class CustomerController {
 
