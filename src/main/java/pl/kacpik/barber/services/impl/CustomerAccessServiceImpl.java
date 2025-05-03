@@ -39,7 +39,6 @@ public class CustomerAccessServiceImpl implements CustomerAccessService {
 
     private CustomerAccess createAndSaveNewCustomerAccess(Customer customer){
         CustomerAccess customerAccess = CustomerAccess.builder()
-                //.token(customer.getId() + "")
                 .customer(customer)
                 .build();
         customerAccessServiceRepository.save(customerAccess);
