@@ -19,6 +19,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -65,6 +66,7 @@ public class CustomerAccessControllerTest {
         when(customerAccessService.getOrCreateCustomerAccess(customer)).thenReturn(customerAccess);
 
         mockMvc.perform(get("/customers/{customerId}/qrcode", customerId)
+                .with(csrf())
                 .contentType(MediaType.IMAGE_PNG))
                 .andExpect(header().string("Content-Type", "image/png"))
                 .andExpect(status().isOk());
@@ -79,6 +81,7 @@ public class CustomerAccessControllerTest {
         when(customerAccessService.getOrCreateCustomerAccess(customer)).thenReturn(customerAccess);
 
         mockMvc.perform(get("/customers/{customerId}/qrcode", customerId)
+                        .with(csrf())
                         .contentType(MediaType.IMAGE_PNG))
                 .andExpect(status().isNotFound());
     }
@@ -94,6 +97,7 @@ public class CustomerAccessControllerTest {
         when(qrCodeGenerator.createQRCode(any())).thenThrow(RuntimeException.class);
 
         mockMvc.perform(get("/customers/{customerId}/qrcode", customerId)
+                        .with(csrf())
                         .contentType(MediaType.IMAGE_PNG))
                 .andExpect(status().isInternalServerError());
     }

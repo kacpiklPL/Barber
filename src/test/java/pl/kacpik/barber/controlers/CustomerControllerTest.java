@@ -21,6 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,8 +49,10 @@ public class CustomerControllerTest {
                 """;
 
         mockMvc.perform(post("/customers")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonValue))
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonValue)
+                )
                 .andExpect(status().isCreated());
     }
 
@@ -79,6 +82,7 @@ public class CustomerControllerTest {
         when(customerMapper.mapTo(customer)).thenReturn(customerDto);
 
         MvcResult result = mockMvc.perform(get("/customers/{customerId}", 1L)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
@@ -100,6 +104,7 @@ public class CustomerControllerTest {
         when(customerService.getCustomerById(nonExistentCustomerId)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/customers/{customerId}", nonExistentCustomerId)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isNotFound());
@@ -111,6 +116,7 @@ public class CustomerControllerTest {
         when(customerService.getCustomerById(1L)).thenReturn(Optional.of(customer));
 
         mockMvc.perform(delete("/customers/{customerId}", 1L)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isNoContent());
@@ -121,6 +127,7 @@ public class CustomerControllerTest {
         when(customerService.getCustomerById(1L)).thenReturn(Optional.empty());
 
         mockMvc.perform(delete("/customers/{customerId}", 1L)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isNotFound());
@@ -135,6 +142,7 @@ public class CustomerControllerTest {
         when(customerMapper.mapTo(customer)).thenReturn(customerDto);
 
         mockMvc.perform(put("/customers/{customerId}", 1L)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new Gson().toJson(customerDto))
                 )
@@ -147,6 +155,7 @@ public class CustomerControllerTest {
         when(customerService.updateCustomer(1L, customerDto)).thenThrow(new EntityNotFoundException());
 
         mockMvc.perform(put("/customers/{customerId}", 1L)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new Gson().toJson(customerDto))
                 )
