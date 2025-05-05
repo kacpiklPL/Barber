@@ -6,16 +6,14 @@ Aplikacja umożliwia klientom dokonywanie rezerwacji wizyt, a administratorowi �
 ## Funkcje
 - Tworzenie i zarządzanie klientami
 - Tworzenie i zarządzanie pracownikami
-- Tworzenie unikalnego kodu QR dla zaufanych klientów do rezerwowania wizyt Online
 - Tworzenie i zarządzanie usługami osobno dla danego pracownika (np. strzyżenie, golenie)
 
 ## Planowane funkcjonalności
 - Tworzenie i zarządzanie godzinami pracy pracownika (Niestandardowe godziny pracy)
 - Tworzenie i zarządzanie rezerwacjami
-- Zarządzanie unikalnymi kodami QR
 - Płatność z góry za wizytę z użyciem Stripe
 - System SMS, który będzie przypominał o zbliżającej się wizycie
-- Raport pracowników z statystykami
+- Raport pracowników ze statystykami
 
 ## Technologia
 - **Java 17**
