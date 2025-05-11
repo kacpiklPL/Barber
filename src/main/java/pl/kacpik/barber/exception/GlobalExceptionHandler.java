@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.kacpik.barber.exceptions.DuplicateEmailException;
 import pl.kacpik.barber.exceptions.DuplicatePhoneNumberException;
+import pl.kacpik.barber.exceptions.ReservationConflictException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -26,4 +27,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
+    @ExceptionHandler(ReservationConflictException.class)
+    public ResponseEntity<String> handleReservationConflict(ReservationConflictException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
 }
